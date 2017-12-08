@@ -15,7 +15,9 @@ public class MoneyCalculator {
 
     private double amount;
     private double exchangeRate;
-    private String currency;
+    private String currencyFrom;
+    private String currencyTo;
+
 
     private void execute() throws Exception {
         input();
@@ -24,20 +26,24 @@ public class MoneyCalculator {
     }
 
     private void input() {
-        System.out.print("Introduzca una cantidad de dolares: ");
+        System.out.print("Introduzca una cantidad: ");
         Scanner scanner = new Scanner(System.in);
+        
         amount = Double.parseDouble(scanner.next());
         
-        System.out.print("Introduzca una divisa: ");
-        currency = scanner.next();
+        System.out.print("Introduzca la divisa de origen: ");
+        currencyFrom = scanner.next();
+    
+        System.out.print("Introduzca la divisa de destino: ");
+        currencyTo = scanner.next();
     }
 
     private void process() throws Exception {
-        exchangeRate = getExchangeRate(currency, "EUR");
+        exchangeRate = getExchangeRate(currencyFrom, currencyTo);
     }
 
     private void output() {
-        System.out.println(amount + " " + currency + " equivalen a " + amount * exchangeRate + " EUR");
+        System.out.println(amount + " " + currencyFrom + " equivalen a " + amount * exchangeRate + " " + currencyTo);
     }
 
     private static double getExchangeRate(String from, String to) throws Exception {
