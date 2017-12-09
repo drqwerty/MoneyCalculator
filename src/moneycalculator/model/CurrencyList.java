@@ -36,7 +36,7 @@ public class CurrencyList {
         add(new Currency("SEK", "Corona sueca", "kr"));
         add(new Currency("SGD", "Dólar singapurense", "$"));
         add(new Currency("THB", "Bat", "฿"));
-        add(new Currency("TRY", "Lira turca", ""));
+        add(new Currency("TRY", "Lira turca", "TL"));
         add(new Currency("USD", "Dólar estadounidense", "$"));
         add(new Currency("ZAR", "Rand", "R"));
     }
