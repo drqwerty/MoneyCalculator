@@ -1,11 +1,11 @@
 package moneycalculator.model;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class CurrencyList {
 
-    private final Map<String, Currency> currencies = new HashMap<>();
+    private final Map<String, Currency> currencies = new LinkedHashMap<>();
 
     public CurrencyList() {
         add(new Currency("AUD", "Dólar australiano", "$"));
@@ -43,6 +43,10 @@ public class CurrencyList {
 
     private void add(Currency currency) {
         currencies.put(currency.getCode(), currency);
+    }
+
+    public Map<String, Currency> getCurrencies() {
+        return currencies;
     }
 
     public Currency get(String code) {

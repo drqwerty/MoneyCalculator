@@ -8,13 +8,21 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Date;
 import java.util.Scanner;
+import moneycalculator.controller.Controller;
 import moneycalculator.model.ExchangeRate;
+import moneycalculator.view.MainWindow;
 
 public class MoneyCalculator {
 
     public static void main(String[] args) throws Exception {
+        MainWindow view = new MainWindow();
+        CurrencyList currencyList = new CurrencyList();
+        Controller controler = new Controller(currencyList, view);
+        
+        /*
         MoneyCalculator moneyCalculator = new MoneyCalculator();
         moneyCalculator.execute();
+*/
     }
 
     private final CurrencyList currencyList;
