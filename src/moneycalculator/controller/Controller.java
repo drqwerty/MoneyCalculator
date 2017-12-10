@@ -10,83 +10,72 @@ import moneycalculator.view.MainWindow;
 public class Controller {
 
     private final CurrencyList currencyList;
-    private String[] currencyListString1;
     private final MainWindow view;
-    private Object selectedItemCurrencyFrom, selectedItemCurrencyTo;
+    private JComboBox currencyFrom, currencyTo;
+    private String[] currencyListString;
+    private Object selectedCurrencyFrom, selectedCurrencyTo;
 
     public Controller(CurrencyList currencyList, MainWindow view) {
-        this.currencyList = currencyList;
         this.view = view;
+        this.currencyList = currencyList;
+        initJComboBox();
         execute();
-        new Listeners(this, view);
+    }
+
+    private void initJComboBox() {
+        currencyTo = this.view.getjComboBox_currencyTo();
+        currencyFrom = this.view.getjComboBox_currencyFrom();
     }
 
     private void execute() {
         setOptionsCurrencyFrom();
         setOptionsCurrencyTo();
+        saveSelections();
+        new Listeners(this, view);
     }
 
     public void setOptionsCurrencyFrom() {
-        JComboBox currencyFrom = view.getjComboBox_currencyFrom();
-        currencyFrom.setModel(new DefaultComboBoxModel<>(getCurrencyList1()));
-        selectedItemCurrencyFrom = currencyFrom.getSelectedItem();
+        currencyFrom.setModel(new DefaultComboBoxModel<>(getCurrencyList()));
     }
 
     public void setOptionsCurrencyTo() {
-        JComboBox currencyTo = view.getjComboBox_currencyTo();
-        currencyTo.setModel(new DefaultComboBoxModel<>(getCurrencyList2()));
-        selectedItemCurrencyTo = currencyTo.getSelectedItem();
-    }
-
-    private String[] getCurrencyList1() {
-        Map<String, Currency> currencies = currencyList.getCurrencies();
-        currencyListString1 = new String[currencies.size()];
-        int i = 0;
-        for (Map.Entry<String, Currency> entry : currencies.entrySet()) {
-            currencyListString1[i++] = entry.getKey() + " " + entry.getValue().getName();
-        }
-        return currencyListString1;
-    }
-
-    private String[] getCurrencyList2() {
-        String[] currencyListString2 = new String[currencyListString1.length - 1];
-        int i = 0;
-        for (String currency : currencyListString1) {
-            if (view.getjComboBox_currencyFrom().getSelectedItem().equals(currency)) {
+        currencyTo.removeAllItems();
+        for (int i = 0; i < currencyFrom.getItemCount(); i++) {
+            if (currencyFrom.getSelectedItem().equals(currencyFrom.getItemAt(i)))
                 continue;
-            }
-            currencyListString2[i++] = currency;
+            currencyTo.addItem(currencyFrom.getItemAt(i));
         }
-        return currencyListString2;
     }
 
-    // TODO dont swap
-    public void reverseCurrency() {
-        Object aux = view.getjComboBox_currencyFrom().getSelectedItem();
-        view.getjComboBox_currencyFrom().setSelectedItem(view.getjComboBox_currencyTo().getSelectedItem());
-        saveSelections();
+    private String[] getCurrencyList() {
+        Map<String, Currency> currencies = currencyList.getCurrencies();
+        currencyListString = new String[currencies.size()];
+        int i = 0;
+        for (Map.Entry<String, Currency> entry : currencies.entrySet())
+            currencyListString[i++] = entry.getKey() + " " + entry.getValue().getName();
+        return currencyListString;
+    }
+    
+    public void invertCurrency() {
+        Object aux = selectedCurrencyFrom;
+        currencyFrom.setSelectedItem(selectedCurrencyTo);
         newSelectionCurrencyTo(aux);
     }
 
     public void changeOptionsCurrencyTo() {
-
-        Object newSelectedItemCurrentyFrom = view.getjComboBox_currencyFrom().getSelectedItem();
-        if (newSelectedItemCurrentyFrom.toString().equals(selectedItemCurrencyTo.toString())) {
-            reverseCurrency();
-        } else {
-            selectedItemCurrencyTo = view.getjComboBox_currencyTo().getSelectedItem();
-            newSelectionCurrencyTo(selectedItemCurrencyTo);
-        }
-        saveSelections();
+        if (currencyFrom.getSelectedItem().equals(selectedCurrencyTo))
+            newSelectionCurrencyTo(selectedCurrencyFrom);
+        else newSelectionCurrencyTo(currencyTo.getSelectedItem());
     }
 
     private void newSelectionCurrencyTo(Object newSelection) {
         setOptionsCurrencyTo();
-        view.getjComboBox_currencyTo().setSelectedItem(newSelection);
+        currencyTo.setSelectedItem(newSelection);
+        saveSelections();
     }
 
     public void saveSelections() {
-        selectedItemCurrencyFrom = view.getjComboBox_currencyFrom().getSelectedItem();
-        selectedItemCurrencyTo = view.getjComboBox_currencyTo().getSelectedItem();
+        selectedCurrencyFrom = currencyFrom.getSelectedItem();
+        selectedCurrencyTo = currencyTo.getSelectedItem();
     }
 }

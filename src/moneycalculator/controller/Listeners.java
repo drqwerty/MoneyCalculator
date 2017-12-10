@@ -25,7 +25,7 @@ public class Listeners {
         view.getjButton_invert().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                controller.reverseCurrency();
+                controller.invertCurrency();
             }
         });
     }
