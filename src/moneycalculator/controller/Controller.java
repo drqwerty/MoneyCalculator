@@ -6,6 +6,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Date;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 import moneycalculator.model.Currency;
@@ -86,14 +88,18 @@ public class Controller {
     }
 
     // TODO clean code!
-    public void calculate() throws Exception {
+    public void calculate() {
         String amount = view.getjTextField_amount().getText();
         String from =selectedCurrencyFrom.toString().substring(0, 3);
         String to =selectedCurrencyTo.toString().substring(0, 3);
         
-        moneycalculator.model.Money a = new moneycalculator.model.Money(Double.parseDouble(amount), currencyList.get(from));
-        Currency b = currencyList.get(to);
-        System.out.println(amount + " " + a.getCurrency().getSymbol() + " equivalen a " + a.getAmount() * getExchangeRate(a.getCurrency(), currencyList.get(to)).getRate() + " " + b.getSymbol());
+        try {
+            moneycalculator.model.Money a = new moneycalculator.model.Money(Double.parseDouble(amount), currencyList.get(from));
+            Currency b = currencyList.get(to);
+            System.out.println(amount + " " + a.getCurrency().getSymbol() + " equivalen a " + a.getAmount() * getExchangeRate(a.getCurrency(), currencyList.get(to)).getRate() + " " + b.getSymbol());
+        } catch (Exception ex) {
+            System.out.println("Algo ha salido mal");
+        }
     }
 
     private ExchangeRate getExchangeRate(Currency from, Currency to) throws Exception {
