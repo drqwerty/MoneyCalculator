@@ -45,18 +45,15 @@ public class MainWindow extends javax.swing.JFrame {
         jTextPane_currencyAmountFrom.setEditable(false);
         jTextPane_currencyAmountFrom.setBackground(null);
         jTextPane_currencyAmountFrom.setBorder(null);
-        jTextPane_currencyAmountFrom.setText("1 USD =");
 
         jTextPane_amountTo.setEditable(false);
         jTextPane_amountTo.setBackground(null);
         jTextPane_amountTo.setBorder(null);
         jTextPane_amountTo.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
-        jTextPane_amountTo.setText("0,849569");
 
         jTextPane_currencyTo.setEditable(false);
         jTextPane_currencyTo.setBackground(null);
         jTextPane_currencyTo.setBorder(null);
-        jTextPane_currencyTo.setText("EUR");
 
         javax.swing.GroupLayout jPanel_resultLayout = new javax.swing.GroupLayout(jPanel_result);
         jPanel_result.setLayout(jPanel_resultLayout);

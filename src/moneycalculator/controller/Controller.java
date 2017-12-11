@@ -6,13 +6,12 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Date;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 import moneycalculator.model.Currency;
 import moneycalculator.model.CurrencyList;
 import moneycalculator.model.ExchangeRate;
+import moneycalculator.model.Money;
 import moneycalculator.view.MainWindow;
 
 public class Controller {
@@ -87,18 +86,39 @@ public class Controller {
         selectedCurrencyTo = currencyTo.getSelectedItem();
     }
 
-    // TODO clean code!
     public void calculate() {
-        String amount = view.getjTextField_amount().getText();
-        String from =selectedCurrencyFrom.toString().substring(0, 3);
-        String to =selectedCurrencyTo.toString().substring(0, 3);
+        setData(new GetData());
+    }
+
+    class GetData {
+
+        public GetData() {
+        }
         
+        private Double getAmount() {
+            try {
+                return Double.parseDouble(view.getjTextField_amount().getText());
+            } catch (Exception e) {
+                return null;
+            }
+        }
+        
+        public Money getCurrencyFrom() {
+            return new Money(getAmount(), currencyList.get(selectedCurrencyFrom.toString().substring(0, 3)));
+        }
+        
+        public Currency getCurrencyTo() {
+            return currencyList.get(selectedCurrencyTo.toString().substring(0, 3));
+        }
+    }
+    
+    private void setData(GetData data) {
         try {
-            moneycalculator.model.Money a = new moneycalculator.model.Money(Double.parseDouble(amount), currencyList.get(from));
-            Currency b = currencyList.get(to);
-            System.out.println(amount + " " + a.getCurrency().getSymbol() + " equivalen a " + a.getAmount() * getExchangeRate(a.getCurrency(), currencyList.get(to)).getRate() + " " + b.getSymbol());
+            ExchangeRate operation = getExchangeRate(data.getCurrencyFrom().getCurrency(), data.getCurrencyTo());
+            view.getjTextPane_currencyAmountFrom().setText(view.getjTextField_amount().getText() + " " + data.getCurrencyFrom().getCurrency().getCode() + " = ");
+            view.getjTextPane_amountTo().setText(String.valueOf(operation.getRate()));
+            view.getjTextPane_currencyTo().setText(data.getCurrencyTo().getCode());
         } catch (Exception ex) {
-            System.out.println("Algo ha salido mal");
         }
     }
 
