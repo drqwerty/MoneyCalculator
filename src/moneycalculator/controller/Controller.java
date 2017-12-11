@@ -1,10 +1,16 @@
 package moneycalculator.controller;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.Date;
 import java.util.Map;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 import moneycalculator.model.Currency;
 import moneycalculator.model.CurrencyList;
+import moneycalculator.model.ExchangeRate;
 import moneycalculator.view.MainWindow;
 
 public class Controller {
@@ -18,11 +24,11 @@ public class Controller {
     public Controller(CurrencyList currencyList, MainWindow view) {
         this.view = view;
         this.currencyList = currencyList;
-        initJComboBox();
+        initVariables();
         execute();
     }
 
-    private void initJComboBox() {
+    private void initVariables() {
         currencyTo = this.view.getjComboBox_currencyTo();
         currencyFrom = this.view.getjComboBox_currencyFrom();
     }
@@ -77,5 +83,28 @@ public class Controller {
     public void saveSelections() {
         selectedCurrencyFrom = currencyFrom.getSelectedItem();
         selectedCurrencyTo = currencyTo.getSelectedItem();
+    }
+
+    // TODO clean code!
+    public void calculate() throws Exception {
+        String amount = view.getjTextField_amount().getText();
+        String from =selectedCurrencyFrom.toString().substring(0, 3);
+        String to =selectedCurrencyTo.toString().substring(0, 3);
+        
+        moneycalculator.model.Money a = new moneycalculator.model.Money(Double.parseDouble(amount), currencyList.get(from));
+        Currency b = currencyList.get(to);
+        System.out.println(amount + " " + a.getCurrency().getSymbol() + " equivalen a " + a.getAmount() * getExchangeRate(a.getCurrency(), currencyList.get(to)).getRate() + " " + b.getSymbol());
+    }
+
+    private ExchangeRate getExchangeRate(Currency from, Currency to) throws Exception {
+        URL url = new URL("http://api.fixer.io/latest?base=" + from.getCode() + "&symbols=" + to.getCode());
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        connection.setRequestMethod("GET");
+        InputStreamReader input = new InputStreamReader(connection.getInputStream());
+        try (BufferedReader reader = new BufferedReader(input)) {
+            String line = reader.readLine();
+            line = line.substring(line.indexOf(to.getCode()) + 5, line.indexOf("}"));
+            return new ExchangeRate(from, to, new Date(), Double.parseDouble(line));
+        }
     }
 }

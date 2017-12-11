@@ -2,6 +2,9 @@ package moneycalculator.view;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.JTextPane;
 
 public class MainWindow extends javax.swing.JFrame {
 
@@ -141,8 +144,32 @@ public class MainWindow extends javax.swing.JFrame {
         return jComboBox_currencyTo;
     }
 
+    public JTextField getjTextField_amount() {
+        return jTextField_amount;
+    }
+
     public JButton getjButton_invert() {
         return jButton_invert;
+    }
+
+    public JButton getjButton_calculate() {
+        return jButton_calculate;
+    }
+
+    public JPanel getjPanel_result() {
+        return jPanel_result;
+    }
+
+    public JTextPane getjTextPane_amountTo() {
+        return jTextPane_amountTo;
+    }
+
+    public JTextPane getjTextPane_currencyAmountFrom() {
+        return jTextPane_currencyAmountFrom;
+    }
+
+    public JTextPane getjTextPane_currencyTo() {
+        return jTextPane_currencyTo;
     }
 
 }

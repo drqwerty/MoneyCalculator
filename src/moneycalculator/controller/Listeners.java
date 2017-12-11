@@ -2,6 +2,10 @@ package moneycalculator.controller;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import javafx.scene.input.KeyCode;
 import moneycalculator.view.MainWindow;
 
 public class Listeners {
@@ -16,6 +20,8 @@ public class Listeners {
     }
 
     private void addListeners() {
+        calculateButton();
+        amount();
         invertButtonListener();
         selectionCurrencyFrom();
         selectionCurrencyTo();
@@ -44,6 +50,24 @@ public class Listeners {
             @Override
             public void actionPerformed(ActionEvent e) {
                 controller.saveSelections();
+            }
+        });
+    }
+
+    private void amount() {
+        view.getjTextField_amount().addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if(e.getKeyCode() == KeyCode.ENTER.impl_getCode()) controller.calculate();
+            }
+        });
+    }
+
+    private void calculateButton() {
+        view.getjButton_calculate().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                controller.calculate();
             }
         });
     }
