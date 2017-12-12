@@ -87,46 +87,76 @@ public class Controller {
     }
 
     public void calculate() {
-        setData(new GetData());
+        try {
+            setData(new GetData());
+        } catch (Exception ex) {
+        }
     }
 
     class GetData {
 
-        public GetData() {
+        Money money;
+        ExchangeRate operation;
+        String CurrencyToString;
+        
+        public GetData() throws Exception {
+            Currency currency = currencyList.get(selectedCurrencyFrom.toString().substring(0, 3));
+            money = new Money(getAmount(), currency);
+            CurrencyToString = selectedCurrencyTo.toString().substring(0, 3);
+            operation = getExchangeRate(money.getCurrency(), currencyList.get(CurrencyToString));
         }
         
         private Double getAmount() {
+            String amount = view.getjTextField_amount().getText();
             try {
-                return Double.parseDouble(view.getjTextField_amount().getText());
+                return Double.parseDouble(amount);
             } catch (Exception e) {
                 return null;
             }
         }
         
-        public Money getCurrencyFrom() {
-            return new Money(getAmount(), currencyList.get(selectedCurrencyFrom.toString().substring(0, 3)));
+        public String getCurrencyTo() {
+            return operation.getTo().getCode();
         }
         
-        public Currency getCurrencyTo() {
-            return currencyList.get(selectedCurrencyTo.toString().substring(0, 3));
+        public String getCurrencyFrom() {
+            if(operation == null) return "";
+            String amount = String.valueOf(getAmount());
+            String currencyCode = operation.getFrom().getCode();
+            return amount + " " + currencyCode + " = ";
+        }
+        
+        public String getRate() {
+            if(operation == null) return "Problemas con la conexión";
+            return String.valueOf(operation.getRate() * getAmount());
         }
     }
     
     private void setData(GetData data) {
         try {
-            ExchangeRate operation = getExchangeRate(data.getCurrencyFrom().getCurrency(), data.getCurrencyTo());
-            view.getjTextPane_currencyAmountFrom().setText(view.getjTextField_amount().getText() + " " + data.getCurrencyFrom().getCurrency().getCode() + " = ");
-            view.getjTextPane_amountTo().setText(String.valueOf(operation.getRate()));
-            view.getjTextPane_currencyTo().setText(data.getCurrencyTo().getCode());
+            view.getjTextPane_currencyAmountFrom().setText(data.getCurrencyFrom());
+            view.getjTextPane_amountTo().setText(data.getRate());
+            view.getjTextPane_currencyTo().setText(data.getCurrencyTo());
         } catch (Exception ex) {
         }
     }
 
     private ExchangeRate getExchangeRate(Currency from, Currency to) throws Exception {
+        
+        Process ping;
+        if (System.getProperty("os.name").startsWith("Windows")) {
+            ping = java.lang.Runtime.getRuntime().exec("ping -n 1 api.fixer.io");
+        } else {
+            ping = java.lang.Runtime.getRuntime().exec("ping -c 1 api.fixer.io");
+        }
+        boolean reachable = (ping.waitFor() == 0);
+        if (!reachable) return null;
+        
         URL url = new URL("http://api.fixer.io/latest?base=" + from.getCode() + "&symbols=" + to.getCode());
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod("GET");
         InputStreamReader input = new InputStreamReader(connection.getInputStream());
+        
         try (BufferedReader reader = new BufferedReader(input)) {
             String line = reader.readLine();
             line = line.substring(line.indexOf(to.getCode()) + 5, line.indexOf("}"));

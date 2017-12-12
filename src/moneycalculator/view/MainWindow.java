@@ -12,6 +12,7 @@ public class MainWindow extends javax.swing.JFrame {
         initComponents();
         setLocationRelativeTo(null);
         setVisible(true);
+        jTextField_amount.requestFocus();
     }
 
     @SuppressWarnings("unchecked")
@@ -37,6 +38,7 @@ public class MainWindow extends javax.swing.JFrame {
 
         jButton_calculate.setText("→");
         jButton_calculate.setBorder(null);
+        jButton_calculate.setNextFocusableComponent(jTextField_amount);
 
         jButton_invert.setText("↔");
         jButton_invert.setBorder(null);
