@@ -26,7 +26,7 @@ public class CommandCalculate implements Command {
         display.getShowCurrencyTo().setText("");
         try {
             String[] data = printExchangeRate(withOptions(getInputs()));
-            display.getShowCurrencyFrom().setText(data[0] + " =");
+            display.getShowCurrencyFrom().setText(data[0]);
             display.getShowAmountOutput().setText(data[2]);
             display.getShowCurrencyTo().setText(data[1]);
         } catch (NumberFormatException e) {
@@ -50,7 +50,7 @@ public class CommandCalculate implements Command {
 
     private String[] printExchangeRate(ExchangeRate a) {
         String[] values = new String[3];
-        values[0] = String.valueOf(a.getFrom().getCode());
+        values[0] = amountInput.getText() + " " + String.valueOf(a.getFrom().getCode() + " =");
         values[1] = String.valueOf(a.getTo().getCode());
         values[2] = a.getRate() * Double.parseDouble(amountInput.getText()) + "";
         return values;
